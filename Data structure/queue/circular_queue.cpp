@@ -40,16 +40,14 @@ bool isEmpty(){
         return false;
     }
 }
-bool isFull(){
-    if(front == 0 && rear == size - 1){
+bool isFull() {
+    if ((rear + 1) % size == front) {
         return true;
-    }
-    else if(rear == front -1){
-        return true;
-    }else {
+    } else {
         return false;
     }
 }
+
 
 void inqueue(int value){
     if(isFull() ){
