@@ -71,6 +71,8 @@ void Display() {
 #include <iostream>
 using namespace std;
 
+#define SIZE 5 // Default initial size of the stack
+
 class Stack {
 private:
     int* stack;   // Array to store stack elements
@@ -89,8 +91,8 @@ private:
     }
 
 public:
-    Stack(int initialSize = 5) {
-        size = initialSize;
+    Stack() { // Simplified constructor
+        size = SIZE;
         stack = new int[size];
         top = -1;
     }
@@ -141,7 +143,7 @@ public:
 };
 
 int main() {
-    Stack s;
+    Stack s; // Uses SIZE by default
     s.push(1);
     s.push(2);
     s.push(3);
@@ -153,4 +155,3 @@ int main() {
     s.display();
     return 0;
 }
-
