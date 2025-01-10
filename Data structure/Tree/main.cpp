@@ -103,18 +103,18 @@ int main() {
 
 
 
-
 #include <iostream>
 using namespace std;
 
 class Node {
 public:
     int data;
-    Node* left, * right;
+    Node* left;
+    Node* right;
 
     Node(int value) {
         data = value;
-        left = right = NULL;
+        left = right = nullptr;
     }
 };
 
@@ -123,19 +123,19 @@ public:
     Node* root;
 
     BST() {
-        root = NULL;
+        root = nullptr;
     }
 
+    // Insert a node into the binary search tree
     Node* Insert(Node* r, int item) {
-        if (r == NULL) {
+        if (r == nullptr) {
             Node* newnode = new Node(item);
             r = newnode;
-        }
-        else if (item < r->data)
+        } else if (item < r->data) {
             r->left = Insert(r->left, item);
-        else
+        } else {
             r->right = Insert(r->right, item);
-
+        }
         return r;
     }
 
@@ -143,35 +143,33 @@ public:
         root = Insert(root, item);
     }
 
-    void Preorder(Node* r) { // root -> left -> right
-        if (r == NULL)
-            return;
-        cout << r->data << "\t";
+    // Preorder traversal (root -> left -> right)
+    void Preorder(Node* r) {
+        if (r == nullptr) return;
+        cout << r->data << " ";
         Preorder(r->left);
         Preorder(r->right);
     }
 
-    void Inorder(Node* r) { // left -> root -> right
-        if (r == NULL)
-            return;
-
+    // Inorder traversal (left -> root -> right)
+    void Inorder(Node* r) {
+        if (r == nullptr) return;
         Inorder(r->left);
-        cout << r->data << "\t";
+        cout << r->data << " ";
         Inorder(r->right);
     }
 
-    void Postorder(Node* r) { // left -> right -> root
-        if (r == NULL)
-            return;
+    // Postorder traversal (left -> right -> root)
+    void Postorder(Node* r) {
+        if (r == nullptr) return;
         Postorder(r->left);
         Postorder(r->right);
-        cout << r->data << "\t";
+        cout << r->data << " ";
     }
 
+    // Search for a node with a given key
     Node* Search(Node* r, int key) {
-        if (r == NULL)
-            return NULL;
-        else if (r->data == key)
+        if (r == nullptr || r->data == key)
             return r;
         else if (key < r->data)
             return Search(r->left, key);
@@ -181,88 +179,116 @@ public:
 
     bool Search(int key) {
         Node* result = Search(root, key);
-
-        if (result == NULL)
-            return false;
-        else
-            return true;
+        return result != nullptr;
     }
 
-    Node* Findmin(Node* r) {
-        if (r == NULL)
-            return NULL;
-        else if (r->left == NULL)
-            return r;
-        else
-            return Findmin(r->left);
+    // Find the minimum value node in the tree
+    Node* FindMin(Node* r) {
+        while (r && r->left != nullptr)
+            r = r->left;
+        return r;
     }
 
-    Node* Findmax(Node* r) {
-        if (r == NULL)
-            return NULL;
-        else if (r->right == NULL)
-            return r;
-        else
-            return Findmax(r->right);
+    // Find the maximum value node in the tree
+    Node* FindMax(Node* r) {
+        while (r && r->right != nullptr)
+            r = r->right;
+        return r;
     }
 
+    // Delete a node from the tree
     Node* Delete(Node* r, int key) {
-        if (r == NULL) // Empty Tree
-            return NULL;
+        if (r == nullptr)
+            return r;
 
-        if (key < r->data) // Item exists in left sub-tree
+        // Recursively find the node to delete
+        if (key < r->data)
             r->left = Delete(r->left, key);
-        else if (key > r->data) // Item exists in right sub-tree
+        else if (key > r->data)
             r->right = Delete(r->right, key);
         else {
-            if (r->left == NULL && r->right == NULL) { // Leaf node
+            // Node to be deleted is found
+
+            // Case 1: Node has no children (leaf node)
+            if (r->left == nullptr && r->right == nullptr) {
                 delete r;
-                r = NULL;
+                r = nullptr;
             }
-            else if (r->left != NULL && r->right == NULL) { // One child on the left
-                Node* temp = r;
-                r = r->left;
-                delete temp;
-            }
-            else if (r->left == NULL && r->right != NULL) { // One child on the right
+            // Case 2: Node has one child (either left or right)
+            else if (r->left == nullptr) {
                 Node* temp = r;
                 r = r->right;
                 delete temp;
             }
-            else { // Two children
-                Node* max = Findmax(r->left);
-                r->data = max->data;
-                r->left = Delete(r->left, max->data);
+            else if (r->right == nullptr) {
+                Node* temp = r;
+                r = r->left;
+                delete temp;
+            }
+            // Case 3: Node has two children
+            else {
+                Node* temp = FindMin(r->right);
+                r->data = temp->data;
+                r->right = Delete(r->right, temp->data);
             }
         }
         return r;
     }
+
+    // Wrapper function for delete
+    void Delete(int key) {
+        root = Delete(root, key);
+    }
 };
 
 int main() {
-    // Insert nodes into the tree
-    BST btree;
-    btree.Insert(45);
-    btree.Insert(15);
-    btree.Insert(79);
-    btree.Insert(90);
-    btree.Insert(10);
-    btree.Insert(55);
-    btree.Insert(12);
-    btree.Insert(20);
-    btree.Insert(50);
+    BST tree;
+    tree.Insert(10);
+    tree.Insert(8);
+    tree.Insert(6);
+    tree.Insert(7);
+    tree.Insert(15);
+    tree.Insert(12);
+    tree.Insert(20);
 
-    cout << "Display the Tree Content (Preorder):\n";
-    btree.Preorder(btree.root);
+    // Display the tree traversals
+    cout << "Pre-order traversal: ";
+    tree.Preorder(tree.root);
+    cout << endl;
 
-    cout << "\n\nDelete Items\n";
-    btree.root = btree.Delete(btree.root, 12);
-    cout << "\nPreorder After Delete 12:\n";
-    btree.Preorder(btree.root);
+    cout << "In-order traversal: ";
+    tree.Inorder(tree.root);
+    cout << endl;
 
-    btree.root = btree.Delete(btree.root, 15);
-    cout << "\nPreorder After Delete 15:\n";
-    btree.Preorder(btree.root);
+    cout << "Post-order traversal: ";
+    tree.Postorder(tree.root);
+    cout << endl;
+
+    // Search for an element
+    int key = 15;
+    if (tree.Search(key))
+        cout << "Element " << key << " found in the tree." << endl;
+    else
+        cout << "Element " << key << " not found in the tree." << endl;
+
+    // Find minimum and maximum
+    Node* min = tree.FindMin(tree.root);
+    Node* max = tree.FindMax(tree.root);
+    cout << "Minimum value in the tree: " << (min ? min->data : -1) << endl;
+    cout << "Maximum value in the tree: " << (max ? max->data : -1) << endl;
+
+    // Delete elements
+    cout << "Deleting node with value 12..." << endl;
+    tree.Delete(12);
+    cout << "In-order traversal after deletion: ";
+    tree.Inorder(tree.root);
+    cout << endl;
+
+    cout << "Deleting node with value 8..." << endl;
+    tree.Delete(8);
+    cout << "In-order traversal after deletion: ";
+    tree.Inorder(tree.root);
+    cout << endl;
 
     return 0;
 }
