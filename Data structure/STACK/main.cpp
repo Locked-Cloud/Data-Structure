@@ -60,3 +60,96 @@ void Display() {
         cout << endl;
     }
 }
+
+
+
+
+/////////////////////////////////////////////
+
+
+
+#include <iostream>
+using namespace std;
+
+class Stack {
+private:
+    int* stack;   // Array to store stack elements
+    int top;      // Index of the top element
+    int size;     // Current capacity of the stack
+
+    void resize() {
+        size *= 2;
+        int* newStack = new int[size];
+        for (int i = 0; i <= top; i++) {
+            newStack[i] = stack[i];
+        }
+        delete[] stack;
+        stack = newStack;
+        cout << "Stack resized to " << size << endl;
+    }
+
+public:
+    Stack(int initialSize = 5) {
+        size = initialSize;
+        stack = new int[size];
+        top = -1;
+    }
+
+    ~Stack() {
+        delete[] stack;
+    }
+
+    void push(int value) {
+        if (top == size - 1) {
+            resize();
+        }
+        stack[++top] = value;
+        cout << value << " added to stack\n";
+    }
+
+    int pop() {
+        if (isEmpty()) {
+            cout << "Stack is empty, nothing to pop\n";
+            return -1;
+        }
+        return stack[top--];
+    }
+
+    int peek() const {
+        if (isEmpty()) {
+            cout << "Stack is empty\n";
+            return -1;
+        }
+        return stack[top];
+    }
+
+    bool isEmpty() const {
+        return top == -1;
+    }
+
+    void display() const {
+        if (isEmpty()) {
+            cout << "Stack is empty\n";
+        } else {
+            cout << "Stack elements: ";
+            for (int i = top; i >= 0; i--) {
+                cout << stack[i] << " ";
+            }
+            cout << endl;
+        }
+    }
+};
+
+int main() {
+    Stack s;
+    s.push(1);
+    s.push(2);
+    s.push(3);
+    s.push(4);
+    s.push(5);
+    s.push(6); // Trigger resizing
+    cout << s.pop() << " removed from stack\n";
+    cout << "Top element: " << s.peek() << endl;
+    s.display();
+    return 0;
+}
