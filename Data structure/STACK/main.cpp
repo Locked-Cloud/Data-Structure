@@ -115,7 +115,7 @@ public:
         return stack[top--];
     }
 
-    int peek() const {
+    int peek() {
         if (isEmpty()) {
             cout << "Stack is empty\n";
             return -1;
@@ -123,11 +123,11 @@ public:
         return stack[top];
     }
 
-    bool isEmpty() const {
+    bool isEmpty() {
         return top == -1;
     }
 
-    void display() const {
+    void display() {
         if (isEmpty()) {
             cout << "Stack is empty\n";
         } else {
@@ -153,3 +153,4 @@ int main() {
     s.display();
     return 0;
 }
+
