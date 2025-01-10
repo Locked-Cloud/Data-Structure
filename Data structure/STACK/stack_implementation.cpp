@@ -101,3 +101,95 @@ int peek() {
         return top->data;   // Return the data of the top node
     }
 }
+
+
+
+/////////////////////////////////////////////
+
+
+
+
+#include <iostream>
+using namespace std;
+
+class Stack {
+private:
+    struct Node {
+        int data;
+        Node* next;
+    };
+    
+    Node* top;  // Pointer to the top element in the stack
+    
+public:
+    Stack() {
+        top = nullptr;  // Initially, the stack is empty
+    }
+
+    ~Stack() {
+        while (top != nullptr) {
+            pop();  // Free memory used by each node
+        }
+    }
+
+    void push(int value) {
+        Node* newNode = new Node();  // Create a new node
+        newNode->data = value;
+        newNode->next = top;  // Point new node to the current top
+        top = newNode;  // Make new node the top
+        cout << value << " added to stack\n";
+    }
+
+    int pop() {
+        if (isEmpty()) {
+            cout << "Stack is empty, nothing to pop\n";
+            return -1;
+        }
+        Node* temp = top;
+        int poppedValue = top->data;
+        top = top->next;  // Move top pointer to the next node
+        delete temp;  // Free memory of the popped node
+        return poppedValue;
+    }
+
+    int peek() {
+        if (isEmpty()) {
+            cout << "Stack is empty\n";
+            return -1;
+        }
+        return top->data;
+    }
+
+    bool isEmpty() {
+        return top == nullptr;
+    }
+
+    void display() {
+        if (isEmpty()) {
+            cout << "Stack is empty\n";
+        } else {
+            Node* current = top;
+            cout << "Stack elements: ";
+            while (current != nullptr) {
+                cout << current->data << " ";
+                current = current->next;
+            }
+            cout << endl;
+        }
+    }
+};
+
+int main() {
+    Stack s;
+    s.push(1);
+    s.push(2);
+    s.push(3);
+    s.push(4);
+    s.push(5);
+    s.push(6); // Adding more elements to the stack
+    cout << s.pop() << " removed from stack\n";
+    cout << "Top element: " << s.peek() << endl;
+    s.display();
+    return 0;
+}
+
