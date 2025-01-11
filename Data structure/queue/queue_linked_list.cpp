@@ -100,17 +100,17 @@ private:
         Node* next;
     };
 
-    Node* front; // Points to the front of the queue
-    Node* rear;  // Points to the rear of the queue
+    Node* front; // Points to the first element in the queue
+    Node* rear;  // Points to the last element in the queue
 
 public:
-    // Constructor to initialize an empty queue
+    // Constructor to initialize the queue
     Queue() {
         front = NULL;
         rear = NULL;
     }
 
-    // Destructor to clean up the allocated memory
+    // Destructor to free memory
     ~Queue() {
         while (front != NULL) {
             Node* temp = front;
@@ -119,56 +119,60 @@ public:
         }
     }
 
-    // Function to add an element to the queue
+    // Add an element to the queue
     void enqueue(int value) {
-        Node* new_node = new Node{value, NULL};
-        if (front == NULL && rear == NULL) { // Queue is empty
-            front = rear = new_node;
-        } else { // Add to the end
-            rear->next = new_node;
-            rear = new_node;
+        Node* newNode = new Node(); // Create a new node
+        newNode->data = value;
+        newNode->next = NULL;
+
+        if (front == NULL) { // If the queue is empty
+            front = rear = newNode;
+        } else { // Add the new node to the end of the queue
+            rear->next = newNode;
+            rear = newNode;
         }
-        cout << "Inserted " << value << " into the queue." << endl;
+
+        cout << value << " added to the queue." << endl;
     }
 
-    // Function to remove an element from the queue
+    // Remove an element from the queue
     void dequeue() {
-        if (front == NULL) { // Queue is empty
-            cout << "Queue is empty." << endl;
+        if (front == NULL) { // If the queue is empty
+            cout << "Queue is empty!" << endl;
             return;
         }
 
         Node* temp = front;
-        front = front->next;
+        front = front->next; // Move front to the next node
 
         if (front == NULL) { // If the queue is now empty
             rear = NULL;
         }
 
-        cout << "Removed " << temp->data << " from the queue." << endl;
+        cout << temp->data << " removed from the queue." << endl;
         delete temp;
     }
 
-    // Function to get the front element of the queue
+    // Get the front element of the queue
     int peek() {
         if (front == NULL) {
-            cout << "Queue is empty." << endl;
+            cout << "Queue is empty!" << endl;
             return -1;
         }
         return front->data;
     }
 
-    // Function to display all elements in the queue
+    // Display all elements in the queue
     void display() {
         if (front == NULL) {
-            cout << "Queue is empty." << endl;
+            cout << "Queue is empty!" << endl;
             return;
         }
 
         Node* current = front;
-        cout << "Queue elements are: ";
+        cout << "Queue: ";
         while (current != NULL) {
-            cout << current->data << "\t";
+            cout << current->data << " ";
             current = current->next;
         }
         cout << endl;
@@ -181,11 +185,13 @@ int main() {
     q.enqueue(5);
     q.enqueue(10);
     q.enqueue(15);
-    q.enqueue(20);
-    q.enqueue(30);
 
     q.display();
-    cout << "Peek element is " << q.peek() << endl;
+
+    cout << "Front element is: " << q.peek() << endl;
+
+    q.dequeue();
+    q.display();
 
     q.dequeue();
     q.display();
